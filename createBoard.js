@@ -4,6 +4,7 @@ class Cell {
     this.y = y;
     this.visited = false;
     this.steps = 0;
+    this.lastMove = null;
   }
 }
 

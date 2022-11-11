@@ -19,6 +19,21 @@ const createKnight = () => {
   return { moves };
 };
 
+const findPath = (cell, startingArr) => {
+  const arr = [];
+  while (cell.lastMove !== null) {
+    arr.push([cell.x, cell.y]);
+    cell = cell.lastMove;
+  }
+  arr.push(startingArr);
+  arr.reverse();
+  let str = '';
+  arr.forEach((item) => {
+    str += `[${item}] `;
+  });
+  return str;
+};
+
 const knightMoves = (sourceArr, destArr, board = createBoard(8)) => {
   const knight = createKnight();
   const q = [];
@@ -42,7 +57,9 @@ const knightMoves = (sourceArr, destArr, board = createBoard(8)) => {
     if (frontQ.x === destArr[0] && frontQ.y === destArr[1]) {
       let moves = 'moves';
       if (frontQ.steps < 2) moves = 'move';
-      return `Minimum of ${frontQ.steps} ${moves}`;
+      const path = findPath(frontQ, sourceArr);
+      const msg = `- Minimum of ${frontQ.steps} ${moves}\n- Path taken:\n ${path}\n`;
+      return msg;
     }
 
     // go through possible moves
@@ -54,6 +71,7 @@ const knightMoves = (sourceArr, destArr, board = createBoard(8)) => {
       const cell = findCell(newPos, board);
 
       if (isValidMove(newX, newY, board) && !isVisited(cell)) {
+        cell.lastMove = frontQ;
         cell.visited = true;
         cell.steps += 1 + frontQ.steps;
         q.push([newX, newY]);
